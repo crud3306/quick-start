@@ -46,51 +46,52 @@ git push -u origin master
 
 解决mac电脑上出现Permission to xxx.git denied to xxx的问题
 -------------
-cd ~/.ssh
+cd ~/.ssh  
 
-ssh-keygen -t rsa -C "xxxxxxx@163.com"
+ssh-keygen -t rsa -C "xxxxxxx@163.com"  
 
-Generating public/private rsa key pair.
-Enter file in which to save the key (/Users/yidont/.ssh/id_rsa):
-// 这里要你输入存放的目录，可回车默认
+Generating public/private rsa key pair.  
+Enter file in which to save the key (/Users/yidont/.ssh/id_rsa):  
+// 这里要你输入存放的目录，可回车默认  
 
-Enter passphrase (empty for no passphrase): (输入ssh密码)
-Enter same passphrase again: （确认密码）
+Enter passphrase (empty for no passphrase): (输入ssh密码)  
+Enter same passphrase again: （确认密码）  
 
-Your identification has been saved in /Users/yidont/.ssh/id_rsa.
-Your public key has been saved in /Users/yidont/.ssh/id_rsa.pub.
-The key fingerprint is:
-SHA256:1gepuxDHwJRnFbKvc0Zq/NGrFGE9kEXS06jxatPPrSQ voctex@163.com
-The key's randomart image is:
-+---[RSA 2048]----+
-|      ....=*oo   |
-|     o. ooo=+ .  |
-|      oo. =+o.   |
-|       o =.o..   |
-|      . S =o.    |
-|       = =++.    |
-|      . B.=.Eo.. |
-|       o B . +o .|
-|          . o.. .. |
-+----[SHA256]-----+
+Your identification has been saved in /Users/yidont/.ssh/id_rsa.  
+Your public key has been saved in /Users/yidont/.ssh/id_rsa.pub.  
+The key fingerprint is:  
+SHA256:1gepuxDHwJRnFbKvc0Zq/NGrFGE9kEXS06jxatPPrSQ voctex@163.com  
+The key's randomart image is:  
++---[RSA 2048]----+  
+|      ....=*oo   |  
+|     o. ooo=+ .  |  
+|      oo. =+o.   |  
+|       o =.o..   |  
+|      . S =o.    |  
+|       = =++.    |  
+|      . B.=.Eo.. |  
+|       o B . +o .| 
+|        . o.. .. |  
++----[SHA256]-----+  
+  
+ls查看生成的文件  
+id_rsa  id_rsa.pub   
 
-ls查看生成的文件
-id_rsa  id_rsa.pub 
+然后把id_rsa.pub 配到你的 github上，方法如下  
+拷备 id_rsa.pub 文件里的内容  
+登录github -> 个人中心setting -> SSH and GPG keys  
+点击 (new ssh key) 按扭，把拷贝的内容放入 key对应的输入框中，title输入框随意起个名字；确认保存。 
+  
+  
+回到mac的 ~/.ssh/ 目录  
+vi config 添加：  
+  
+#Default gitHub  
+Host github.com  
+HostName github.com  
+User git  
+IdentityFile ~/.ssh/id_rsa  
 
-然后把id_rsa.pub 配到你的 github上，方法如下
-拷备 id_rsa.pub 文件里的内容
-登录github -> 个人中心setting -> SSH and GPG keys
-点击 (new ssh key) 按扭，把拷贝的内容放入 key对应的输入框中，title输入框随意起个名字；确认保存。
-
-
-回到mac的 ~/.ssh/ 目录
-vi config 添加：
-
-#Default gitHub
-Host github.com
-HostName github.com
-User git
-IdentityFile ~/.ssh/id_rsa
 
 :wq
 
