@@ -1,41 +1,42 @@
 Git global setup
 -------------
-git config --global user.name "qianming"
-git config --global user.email "crud3306@163.com"
-//git config --global user.email "curd3306@163.com"
+git config --global user.name "qianming"  
+git config --global user.email "crud3306@163.com"  
+//git config --global user.email "curd3306@163.com"  
 
-注意：
-如果改了github的密码，再次朝 github 上 push时，为会报fatal: Authentication failed。
-这时，重新输入上面两条命令，再次push时，会让重新输入新密码，输入后回车即可
+注意：  
+如果改了github的密码，再次朝 github 上 push时，为会报fatal: Authentication failed。  
+这时，重新输入上面两条命令，再次push时，会让重新输入新密码，输入后回车即可  
 
 
 
 clone a remote repository
 -------------
-git clone http://git.pugutang.cn/back/item.git
-cd item
-touch README.md
-git add README.md
-git commit -m "add README"
-git push -u origin master
+git clone http://git.pugutang.cn/back/item.git  
+cd item  
+touch README.md  
+git add README.md  
+git commit -m "add README"  
+git push -u origin master  
 
 
 create a new repository on the command line
 -------------
-git init
-git add README.md
-git commit -m "first commit"
-// 如果git remote add xxx时，报错fatal: remote origin already exists，需先执行git remote rm origin
-// git remote rm origin
-git remote add origin https://github.com/crud3306/php-start.git
-//git remote add origin ssh://git@github.com:crud3306/php-start.git
-git push -u origin master
+git init  
+git add README.md  
+git commit -m "first commit"  
+// 如果git remote add xxx时，报错fatal: remote origin already exists，需先执行git remote rm origin  
+// git remote rm origin  
+git remote add origin https://github.com/crud3306/php-start.git  
+//git remote add origin ssh://git@github.com:crud3306/php-start.git  
+git push -u origin master  
 
 
 push an existing repository from the command line
 -------------
-git remote add origin http://git.pugutang.cn/back/item.git
-git push -u origin master
+git remote add origin http://git.pugutang.cn/back/item.git  
+git push -u origin master  
+
 
 
 
