@@ -1,5 +1,5 @@
 Git global setup
-================
+-------------
 git config --global user.name "qianming"
 git config --global user.email "crud3306@163.com"
 //git config --global user.email "curd3306@163.com"
@@ -11,7 +11,7 @@ git config --global user.email "crud3306@163.com"
 
 
 clone a remote repository
-================
+-------------
 git clone http://git.pugutang.cn/back/item.git
 cd item
 touch README.md
@@ -21,7 +21,7 @@ git push -u origin master
 
 
 create a new repository on the command line
-================
+-------------
 git init
 git add README.md
 git commit -m "first commit"
@@ -33,7 +33,7 @@ git push -u origin master
 
 
 push an existing repository from the command line
-================
+-------------
 git remote add origin http://git.pugutang.cn/back/item.git
 git push -u origin master
 
@@ -44,7 +44,7 @@ git push -u origin master
 
 
 解决mac电脑上出现Permission to xxx.git denied to xxx的问题
-==========
+-------------
 cd ~/.ssh
 
 ssh-keygen -t rsa -C "xxxxxxx@163.com"
