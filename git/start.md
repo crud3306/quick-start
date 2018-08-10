@@ -1,8 +1,8 @@
 Git global setup
 -------------
-git config --global user.name "qianming"  
-git config --global user.email "crud3306@163.com"  
-//git config --global user.email "curd3306@163.com"  
+> git config --global user.name "qianming"  
+> git config --global user.email "crud3306@163.com"  
+> //git config --global user.email "curd3306@163.com"  
 
 注意：  
 如果改了github的密码，再次朝 github 上 push时，为会报fatal: Authentication failed。  
@@ -12,12 +12,12 @@ git config --global user.email "crud3306@163.com"
 
 clone a remote repository
 -------------
-git clone http://git.pugutang.cn/back/item.git  
-cd item  
-touch README.md  
-git add README.md  
-git commit -m "add README"  
-git push -u origin master  
+> git clone http://git.pugutang.cn/back/item.git  
+> cd item  
+> touch README.md  
+> git add README.md  
+> git commit -m "add README"  
+> git push -u origin master  
 
 
 create a new repository on the command line
