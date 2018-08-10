@@ -22,20 +22,20 @@ clone a remote repository
 
 create a new repository on the command line
 -------------
-git init  
-git add README.md  
-git commit -m "first commit"  
-// 如果git remote add xxx时，报错fatal: remote origin already exists，需先执行git remote rm origin  
-// git remote rm origin  
-git remote add origin https://github.com/crud3306/php-start.git  
-//git remote add origin ssh://git@github.com:crud3306/php-start.git  
-git push -u origin master  
+> git init  
+> git add README.md  
+> git commit -m "first commit"  
+> // 如果git remote add xxx时，报错fatal: remote origin already exists，需先执行git remote rm origin  
+> // git remote rm origin  
+> git remote add origin https://github.com/crud3306/php-start.git  
+> //git remote add origin ssh://git@github.com:crud3306/php-start.git  
+> git push -u origin master  
 
 
 push an existing repository from the command line
 -------------
-git remote add origin http://git.pugutang.cn/back/item.git  
-git push -u origin master  
+> git remote add origin http://git.pugutang.cn/back/item.git  
+> git push -u origin master  
 
 
 
@@ -86,20 +86,17 @@ id_rsa  id_rsa.pub
 回到mac的 ~/.ssh/ 目录  
 vi config 添加：  
   
-#Default gitHub  
-Host github.com  
-HostName github.com  
-User git  
-IdentityFile ~/.ssh/id_rsa  
-
+> #Default gitHub  
+> Host github.com  
+> HostName github.com  
+> User git  
+> IdentityFile ~/.ssh/id_rsa  
 
 :wq
 
-进去本地的git项目中
-$ git remote rm origin
-$ git remote add origin git@github-he:xxx/xxx.git
-
-即可
+进去本地的git项目中，重新提交
+> $ git remote rm origin
+> $ git remote add origin git@github-he:xxx/xxx.git
 
 
 
