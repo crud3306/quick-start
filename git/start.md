@@ -46,9 +46,9 @@ push an existing repository from the command line
 
 解决mac电脑上出现Permission to xxx.git denied to xxx的问题
 -------------
-cd ~/.ssh  
+> cd ~/.ssh  
 
-ssh-keygen -t rsa -C "xxxxxxx@163.com"  
+> ssh-keygen -t rsa -C "xxxxxxx@163.com"  
 
 Generating public/private rsa key pair.  
 Enter file in which to save the key (/Users/yidont/.ssh/id_rsa):  
