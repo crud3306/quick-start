@@ -95,8 +95,8 @@ vi config 添加：
 :wq
 
 进去本地的git项目中，重新提交
-> $ git remote rm origin
-> $ git remote add origin git@github-he:xxx/xxx.git
+> $ git remote rm origin  
+> $ git remote add origin git@github-he:xxx/xxx.git  
 
 
 
