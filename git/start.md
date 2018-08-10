@@ -78,9 +78,9 @@ ls查看生成的文件
 id_rsa  id_rsa.pub   
 
 然后把id_rsa.pub 配到你的 github上，方法如下  
-拷备 id_rsa.pub 文件里的内容  
-登录github -> 个人中心setting -> SSH and GPG keys  
-点击 (new ssh key) 按扭，把拷贝的内容放入 key对应的输入框中，title输入框随意起个名字；确认保存。 
+> 拷备 id_rsa.pub 文件里的内容  
+> 登录github -> 个人中心setting -> SSH and GPG keys  
+> 点击 (new ssh key) 按扭，把拷贝的内容放入 key对应的输入框中，title输入框随意起个名字；确认保存。 
   
   
 回到mac的 ~/.ssh/ 目录  
