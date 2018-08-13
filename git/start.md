@@ -27,8 +27,8 @@ create a new repository on the command line
 > git commit -m "first commit"  
 > // 如果git remote add xxx时，报错fatal: remote origin already exists，需先执行git remote rm origin  
 > // git remote rm origin  
-> git remote add origin https://github.com/crud3306/php-start.git  
-> //git remote add origin ssh://git@github.com:crud3306/php-start.git  
+> //git remote add origin https://github.com/crud3306/php-start.git  
+> git remote add origin git@github.com:crud3306/php-start.git  
 > git push -u origin master  
 
 
@@ -95,8 +95,18 @@ vi config 添加：
 :wq
 
 进去本地的git项目中，重新提交
+
+如果更改了远程地址，需先执行如下命令：
 > $ git remote rm origin  
-> $ git remote add origin git@github-he:xxx/xxx.git  
+> $ git remote add origin git@github.com:xxxx/xxx.git  
+
+然后push， 提交到远程
+> $ git push -u origin master
+
+
+
+
+
 
 
 
