@@ -1,7 +1,7 @@
 学习地址：
 -------------
-http://www.ruanyifeng.com/blog/2017/08/elasticsearch.html
-https://www.cnblogs.com/Wolfmanlq/p/5984494.html
+http://www.ruanyifeng.com/blog/2017/08/elasticsearch.html  
+https://www.cnblogs.com/Wolfmanlq/p/5984494.html  
   
   
 基本概念：  
@@ -15,13 +15,13 @@ Elasticsearch ⇒ 索引（index）   ⇒ 类型（type）   ⇒ 文档(document
 Elastic 需要 Java 8 环境。同时注意要保证环境变量JAVA_HOME正确设置。  
 安装完 Java，就可以跟着官方文档安装 Elastic。直接下载压缩包比较简单。  
   
-> wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.5.1.zip
-> unzip elasticsearch-5.5.1.zip
-> cd elasticsearch-5.5.1/
+> wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.5.1.zip  
+> unzip elasticsearch-5.5.1.zip  
+> cd elasticsearch-5.5.1/  
   
 创建分组与用户，因elasticsearch不允许以root身份直接运行  
-> groupadd elsearch
-> useradd elsearch -s /sbin/nologin -g elsearch
+> groupadd elsearch  
+> useradd elsearch -s /sbin/nologin -g elsearch  
   
 接着，进入解压后的目录，运行下面的命令，启动 Elastic。  
 > ./bin/elasticsearch
@@ -30,20 +30,20 @@ Elastic 需要 Java 8 环境。同时注意要保证环境变量JAVA_HOME正确�
 > sudo sysctl -w vm.max_map_count=262144  
 
 如果一切正常，Elastic 就会在默认的9200端口运行。这时，打开另一个命令行窗口，请求该端口，会得到说明信息。  
-> curl localhost:9200
-{
-"name" : "atntrTf",
-"cluster_name" : "elasticsearch",
-"cluster_uuid" : "tf9250XhQ6ee4h7YI11anA",
-"version" : {
-"number" : "5.5.1",
-"build_hash" : "19c13d0",
-"build_date" : "2017-07-18T20:44:24.823Z",
-"build_snapshot" : false,
-"lucene_version" : "6.6.0"
-},
-"tagline" : "You Know, for Search"
-}
+> curl localhost:9200  
+{  
+"name" : "atntrTf",  
+"cluster_name" : "elasticsearch",  
+"cluster_uuid" : "tf9250XhQ6ee4h7YI11anA",  
+"version" : {  
+"number" : "5.5.1",  
+"build_hash" : "19c13d0",  
+"build_date" : "2017-07-18T20:44:24.823Z",  
+"build_snapshot" : false,  
+"lucene_version" : "6.6.0"  
+},  
+"tagline" : "You Know, for Search"  
+}  
 
 上面代码中，请求9200端口，Elastic 返回一个 JSON 对象，包含当前节点、集群、版本等信息。  
   
@@ -78,9 +78,9 @@ Elastic 需要 Java 8 环境。同时注意要保证环境变量JAVA_HOME正确�
 接着，重新启动 Elastic，就会自动加载这个新安装的插件。  
   
 访问：  
-> curl -XGET 'http://localhost:9200/_analyze?pretty&analyzer=standard' -d ' 第二更新 '
-> curl -XGET  'http://192.168.2.21:9210/_analyze?pretty&analyzer=ik' -d ' 第二更新 '
-> curl http://localhost:9200/_analyze?pretty&analyzer=ik
+> curl -XGET 'http://localhost:9200/_analyze?pretty&analyzer=standard' -d ' 第二更新 '  
+> curl -XGET  'http://192.168.2.21:9210/_analyze?pretty&analyzer=ik' -d ' 第二更新 '  
+> curl http://localhost:9200/_analyze?pretty&analyzer=ik  
 
   
   
@@ -93,10 +93,10 @@ vm_info: Java HotSpot(TM) 64-Bit Server VM (25.151-b12) for linux-amd64 JRE (1.8
 解决方法：  
 > vi config/jvm.options  
 更改：  
-> #-Xms2g
-> #-Xmx2g
-> -Xms512m
-> -Xmx512m
+> #-Xms2g  
+> #-Xmx2g  
+> -Xms512m  
+> -Xmx512m  
   
   
 2 ElasticSearch Root身份运行
@@ -116,21 +116,21 @@ Refer to the log for complete error details.
 建议创建一个单独的用户用来运行ElasticSearch  
   
 创建elsearch用户组及elsearch用户  
-> groupadd elsearch  
+> groupadd elsearch   
 > useradd elsearch -g elsearch -p elasticsearch  
   
 更改elasticsearch文件夹及内部文件的所属用户及组为elsearch:elsearch  
 > cd /user/local
-> chown -R elsearch:elsearch elasticsearch
+> chown -R elsearch:elsearch elasticsearch  
   
 切换到elsearch用户再启动  
   
-> su elsearch
-> cd elasticsearch/
-> ./bin/elasticsearch
+> su elsearch  
+> cd elasticsearch/  
+> ./bin/elasticsearch  
   
 如果用户无登录权限，则不能切换，需用以下命令  
-> sudo -u elsearch /data/elasticsearch-5.5.1/bin/elasticsearch
+> sudo -u elsearch /data/elasticsearch-5.5.1/bin/elasticsearch  
   
   
   
