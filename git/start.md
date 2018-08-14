@@ -36,14 +36,42 @@ push an existing repository from the command line
 -------------
 > git remote add origin http://git.pugutang.cn/back/item.git  
 > git push -u origin master  
+  
+  
+  
+  
+已commit的文件，又想撤销  
+-------------
+在git push的时候，有时候我们会想办法撤销git commit的内容 
 
+方式1：按HEAD
+git reset HEAD 某个文件  
+  
+回滚到上一个快照，有几个~号，即回滚几个版本。也可用~号配合数字表示几个~  
+git reset HEAD~  
+git reset HEAD~~  
+git reset HEAD~10  
+  
 
+方式2： 按版本号回滚或前滚   
+git reset 提交后产生的版本号    
+  
+1、找到之前提交的git commit的id  
+git log   
+找到想要撤销的id   
+  
+2、git reset –hard id   
+完成撤销,同时将代码恢复到前一commit_id 对应的版本   
 
-
-
-
-
-
+3、git reset id   
+完成Commit命令的撤销，但是不对代码修改进行撤销，可以直接通过git commit 重新提交对本地代码的修改  
+  
+  
+  
+  
+  
+  
+  
 解决mac电脑上出现Permission to xxx.git denied to xxx的问题
 -------------
 > cd ~/.ssh  
@@ -102,6 +130,33 @@ vi config 添加：
 
 然后push， 提交到远程
 > $ git push -u origin master
+  
+  
+  
+  
+  
+对已push了不必要文件，却又想删除 的处理方法
+-----------------
+1.先在.gitignore文件上编写一下代码，加上你不想push的文件。比如node_modules 和 dist两个目录
+> node_modules
+> dist
+
+2.在命令行进入仓库目录，删除github仓库上.gitignore上新加的选项
+> git rm -r --cached .
+如果只删除某个目录，可以
+> git rm -r --cached （要删除的文件名,比如node_modules）
+
+3.然后重新添加要提交的选项
+> git add .
+
+4.接着commit，简要说明一下commit的内容
+> git commit -m 'remove node_modules and dist'
+
+5.最后在git push 到远程仓库上就可以了。
+> git push
+
+
+
 
 
 
