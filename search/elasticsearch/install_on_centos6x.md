@@ -72,7 +72,7 @@ Elastic 需要 Java 8 环境。同时注意要保证环境变量JAVA_HOME正确�
 --------------------------
 安装中文分词插件。这里使用的是 ik，也可以考虑其他插件（比如 smartcn）。  
 执行如下命令:  
-> ./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v5.5.1/elasticsearch-analysis-ik-5.5.1.zip
+> ./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v5.5.1/elasticsearch-analysis-ik-5.5.1.zip  
 上面代码安装的是5.5.1版的插件，与 Elastic 5.5.1 配合使用。  
   
 接着，重新启动 Elastic，就会自动加载这个新安装的插件。  
@@ -92,6 +92,7 @@ Memory: 4k page, physical 1016372k(68672k free), swap 2096124k(1439444k free)
 vm_info: Java HotSpot(TM) 64-Bit Server VM (25.151-b12) for linux-amd64 JRE (1.8.0_151-b12), built on Sep 5 2017 19:20:58 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)  
 解决方法：  
 > vi config/jvm.options  
+
 更改：  
 > #-Xms2g  
 > #-Xmx2g  
