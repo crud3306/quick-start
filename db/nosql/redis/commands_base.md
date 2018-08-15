@@ -1,57 +1,11 @@
 
-命令
--------------
-flushdb
-
-
-
-
-
-
-strings
--------------
-
-
-
+地址：
+--------------
+http://redisdoc.com/ （命令汇总）  
   
-hash
--------------
-hset
-hget
-hgetAll
-hincrBy
-expire
 
 
 
-
-
-  
-  
-list
--------------
-
-
-
-
-  
-  
-set
--------------
-sadd
-smembers
-
-
-
-
-
-  
-zset
--------------
-zdd
-zscore
-zincrby
-zrevrange
 
 
 
