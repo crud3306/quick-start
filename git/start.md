@@ -1,3 +1,4 @@
+
 Git global setup
 -------------
 > git config --global user.name "qianming"  
@@ -20,6 +21,8 @@ clone a remote repository
 > git push -u origin master  
 
 
+
+
 create a new repository on the command line
 -------------
 > git init  
@@ -39,25 +42,26 @@ push an existing repository from the command line
   
   
   
+
   
 已commit的文件，又想撤销  
 -------------
 在git push的时候，有时候我们会想办法撤销git commit的内容 
 
 方式1：按HEAD
-git reset HEAD 某个文件  
+> git reset HEAD 某个文件  
   
 回滚到上一个快照，有几个~号，即回滚几个版本。也可用~号配合数字表示几个~  
-git reset HEAD~  
-git reset HEAD~~  
-git reset HEAD~10  
+> git reset HEAD~  
+> git reset HEAD~~  
+> git reset HEAD~10  
   
 
 方式2： 按版本号回滚或前滚   
 git reset 提交后产生的版本号    
   
 1、找到之前提交的git commit的id  
-git log   
+> git log   
 找到想要撤销的id   
   
 2、git reset –hard id   
@@ -67,12 +71,93 @@ git log
 完成Commit命令的撤销，但是不对代码修改进行撤销，可以直接通过git commit 重新提交对本地代码的修改  
   
   
+
+
+对已push了不必要文件，却又想删除 的处理方法  
+-----------------
+1.先在.gitignore文件上编写一下代码，加上你不想push的文件。比如node_modules 和 dist两个目录  
+> node_modules
+> dist
+  
+2.在命令行进入仓库目录，删除github仓库上.gitignore上新加的选项  
+> git rm -r --cached .  
+如果只删除某个目录，可以  
+> git rm -r --cached （要删除的文件名,比如node_modules）  
+  
+3.然后重新添加要提交的选项  
+> git add .
+
+4.接着commit，简要说明一下commit的内容  
+> git commit -m 'remove node_modules and dist'  
+
+5.最后在git push 到远程仓库上就可以了。  
+> git push  
+
+
+
+
+拉取远程数据  
+------------
+1. git fetch：相当于是从远程获取最新版本到本地，不会自动merge  
+  
+> git fetch origin master  
+> git log -p master..origin/master  
+> git merge origin/master  
+  
+以上命令的含义：  
+首先从远程的origin的master主分支下载最新的版本到origin/master分支上  
+然后比较本地的master分支和origin/master分支的差别  
+最后进行合并  
+  
+上述过程其实可以用以下更清晰的方式来进行：  
+  
+> git fetch origin master:tmp  
+> git diff tmp  
+> git merge tmp  
+  
+  
+从远程获取最新的版本到本地的test分支上  
+之后再进行比较合并  
+  
+  
+2. git pull：相当于是从远程获取最新版本并merge到本地  
+> git pull origin master  
+  
+上述命令其实相当于git fetch 和 git merge  
+
+在实际使用中，git fetch更安全一些  
+因为在merge前，我们可以查看更新情况，然后再决定是否合并  
   
   
   
   
   
-解决mac电脑上出现Permission to xxx.git denied to xxx的问题
+
+
+分支
+------------
+创建分支  
+> git branch 分支名称  
+  
+切换分支  
+> git checkout 分支名称  
+  
+创建新并切换：创建新分支并切换到这个分支  
+> git checkout  -b 分支名称  
+  
+  
+当某个分支合并到当前分支  
+> git merge 分支名  
+  
+删除分支  
+> git branch -d 分支名  
+> git branch --delete 分支名  
+  
+  
+   
+  
+  
+解决mac电脑上出现Permission to xxx.git denied to xxx的问题  
 -------------
 > cd ~/.ssh  
 
@@ -81,10 +166,10 @@ git log
 Generating public/private rsa key pair.  
 Enter file in which to save the key (/Users/yidont/.ssh/id_rsa):  
 // 这里要你输入存放的目录，可回车默认  
-
+  
 Enter passphrase (empty for no passphrase): (输入ssh密码)  
 Enter same passphrase again: （确认密码）  
-
+  
 Your identification has been saved in /Users/yidont/.ssh/id_rsa.  
 Your public key has been saved in /Users/yidont/.ssh/id_rsa.pub.  
 The key fingerprint is:  
@@ -98,13 +183,13 @@ The key's randomart image is:
 |      . S =o.    |  
 |       = =++.    |  
 |      . B.=.Eo.. |  
-|       o B . +o .| 
+|       o B . +o .|  
 |        . o.. .. |  
 +----[SHA256]-----+  
   
 ls查看生成的文件  
 id_rsa  id_rsa.pub   
-
+  
 然后把id_rsa.pub 配到你的 github上，方法如下  
 > 拷备 id_rsa.pub 文件里的内容  
 > 登录github -> 个人中心setting -> SSH and GPG keys  
@@ -118,42 +203,25 @@ vi config 添加：
 > Host github.com  
 > HostName github.com  
 > User git  
-> IdentityFile ~/.ssh/id_rsa  
-
-:wq
-
-进去本地的git项目中，重新提交
-
-如果更改了远程地址，需先执行如下命令：
+> IdentityFile ~/.ssh/id_rsa    
+  
+:wq  
+  
+进去本地的git项目中，重新提交  
+  
+如果更改了远程地址，需先执行如下命令：  
 > $ git remote rm origin  
 > $ git remote add origin git@github.com:xxxx/xxx.git  
-
-然后push， 提交到远程
-> $ git push -u origin master
+  
+然后push， 提交到远程  
+> $ git push -u origin master  
   
   
   
   
   
-对已push了不必要文件，却又想删除 的处理方法
------------------
-1.先在.gitignore文件上编写一下代码，加上你不想push的文件。比如node_modules 和 dist两个目录
-> node_modules
-> dist
 
-2.在命令行进入仓库目录，删除github仓库上.gitignore上新加的选项
-> git rm -r --cached .
-如果只删除某个目录，可以
-> git rm -r --cached （要删除的文件名,比如node_modules）
 
-3.然后重新添加要提交的选项
-> git add .
-
-4.接着commit，简要说明一下commit的内容
-> git commit -m 'remove node_modules and dist'
-
-5.最后在git push 到远程仓库上就可以了。
-> git push
 
 
 
