@@ -8,7 +8,8 @@ Redis 是一个基于内存的高性能key-value数据库。
 redis和memcache区别
 -------------
 相同点  
-1 都是在内存中进行数据的存取，都支持k/v的方式存取数据。
+1 都是在内存中进行数据的存取
+2 都支持k/v的方式存取数据
   
 不同点  
 1)、数据支持类型
@@ -50,11 +51,16 @@ Redis为了达到最快的读写速度将数据都读到内存中，并通过异
 
 redis数据类型
 -------------
-Strings  
-Lists  
-Sets  
-Sorted Set   
-hashes  
+strings  字符串
+hashes  散列
+lists  列表
+sets  集合
+sorted set   有序集合
+
+案例：
+https://www.cnblogs.com/phpshen/p/6306739.html
+https://blog.csdn.net/u013239111/article/details/81201404
+
   
   
   
