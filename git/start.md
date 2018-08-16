@@ -134,7 +134,7 @@ git reset 提交后产生的版本号
   
 
 
-分支
+分支 branch
 ------------
 创建分支  
 > git branch 分支名称  
@@ -146,7 +146,7 @@ git reset 提交后产生的版本号
 > git checkout  -b 分支名称  
   
   
-当某个分支合并到当前分支  
+把某个分支合并到当前分支  
 > git merge 分支名  
   
 删除分支  
