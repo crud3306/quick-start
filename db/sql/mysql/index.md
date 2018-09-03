@@ -34,12 +34,14 @@
 
 使用show profile分析sql
 -----------
-1) 首先查看msqyl是否支持show profile   
+1) 首先查看mysql是否支持show profile   
 > select @@have_profiling;  
 2) 如果profiling是关闭的，可以通过set语句在session级别开启profiling。  
 > set profiling=1;   
-3) 通过show profiles语句，查看当前sql的queryID  
-4) 通过show profile for query queryID;  
+3) 查看当前sql的queryID  
+> show profiles;  
+4) 通过queryID查看该sql执行所用时间明细  
+> show profile for query queryID;    
 例：
 ```sql
 set profiling=1;
@@ -47,7 +49,7 @@ select count(*) from shop where id > 10;
 show profiles; #该结果可以拿到上一条sql的queryID
 show profile for query 刚拿到的queryID;
 ```  
-
+  
   
 索引文件存储的位置  
 -----------
@@ -57,7 +59,7 @@ show profile for query 刚拿到的queryID;
 > shop.MYI  表索引  
   
 数据迁移时，可迁移x.frm, x.MYD，但不可迁移x.MYI，因为即使移过去索引也是失效的。  
-
+  
 
 
 
