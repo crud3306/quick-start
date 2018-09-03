@@ -41,8 +41,9 @@
 3) 查看当前sql的queryID  
 > show profiles;  
 4) 通过queryID查看该sql执行所用时间明细  
-> show profile for query queryID;    
-例：
+> show profile for query queryID;  
+
+例：  
 ```sql
 set profiling=1;
 select count(*) from shop where id > 10;
