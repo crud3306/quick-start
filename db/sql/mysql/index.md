@@ -21,8 +21,8 @@
   
 索引的创建  
 -----------
-> create index 索引名称 on 表名(列名)  #创建普通索引，多个列名用逗号分隔  
-> create unique index 索引名称 on 表名(列名)   #创建唯一索引
+> create index 索引名称 on 表名(列名)          #创建普通索引，多个列名用逗号分隔  
+> create unique index 索引名称 on 表名(列名)     #创建唯一索引
   
   
 查看某sql语句用到了什么索引
@@ -47,7 +47,7 @@
 ```sql
 set profiling=1;
 select count(*) from shop where id > 10;
-show profiles; #该结果可以拿到上一条sql的queryID
+show profiles; #该命令可以拿到上一条sql的queryID
 show profile for query 刚拿到的queryID;
 ```  
   
