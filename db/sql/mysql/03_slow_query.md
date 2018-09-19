@@ -27,6 +27,25 @@ mysql5.5及以下版本：
 > long_query_time = 2  
 > log-slow-queries = /data/mysql/slow.log  
 > log_queries_not_using_indexes=1  #将没有使用索引的语句记录到慢查询日志  
+    
   
+xxx
+---------
+> show processlist;  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   

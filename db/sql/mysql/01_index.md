@@ -24,6 +24,9 @@
 > create index 索引名称 on 表名(列名)          #创建普通索引，多个列名用逗号分隔  
 > create unique index 索引名称 on 表名(列名)     #创建唯一索引
   
+删除索引  
+> drop index index_name on table_name;  
+  
   
 查看某sql语句用到了什么索引
 -----------
