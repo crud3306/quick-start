@@ -71,16 +71,16 @@ oracle支持2种事务隔离级别：
 
 mysql支持4种事务隔离级别： 
 ---------- 
-> read uncommitted  读未提交数据  
+> read uncommitted  未提交读（读未提交数据）  
 允许事务读取未被其他事物提交的变更。脏读、不可重复读、幻读问题都会出现。  
     
-> read committed  读已提交数据  
+> read committed  已提交读（读已提交数据)  
 只允许事务读取已经被其它事务提交的变更。可以避免脏读，但不可重复读和幻读问题仍可能出现  
   
 > repeatable read  可重复读  
 确保事务可以多次从一个字段中读取相同的值，在这个事务持续期间，禁止其他事物对这个字段进行更新。可以避免脏读和不可重复读，但幻读问题仍然存在。  
   
-> serializable  串行化  
+> serializable  可串行化  
 确保事务可以从一个表中读取相同的行，在这个事务持续期间，禁止其他事务对该表执行插入、更新、和删除操作。所有并发问题都可避免，但性能十分低下。  
   
 mysql默认的事务隔离级别是repeatable read。
@@ -93,6 +93,9 @@ mysql默认的事务隔离级别是repeatable read。
 
 > set session transaction isolation level read uncommitted;  #仅更改当前链接的
 > set global transaction isolation level read uncommitted;  #更改全局的，链接需重启生效。  
+
+或者
+> set session tx_isolation='read-uncommitted';  #仅更改当前链接的
   
 更改后，再次用 select @@tx_isolation; 查看当前隔离级别  
   
