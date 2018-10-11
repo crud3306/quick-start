@@ -31,9 +31,11 @@ D 持久性（durability）
 2) 显式事务：事务具有明显的开启和结束标记  
 前提：必须先设置自动提交动能为禁用，可通过show variables like 'auto%';查看事务是否自动提交      
 
-步骤1：开启画务    
-set autocommit=0;    
+步骤1：开启事务    
+set autocommit=0;     
 start transaction; #可选的  
+#或者  
+begin;   
   
 步骤2：编写事务中的sql语句（insert update delete）  
 语句1;  
@@ -125,7 +127,7 @@ mysql默认的事务隔离级别是repeatable read。
 大事务建议：  
 避免一次处理太多的数据  
 移出不必要在事务中的select操作  
-  
+
 
 
 
