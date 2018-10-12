@@ -87,14 +87,17 @@ mysql支持4种事务隔离级别：
   
 mysql默认的事务隔离级别是repeatable read。
   
+
 查看mysql当前隔离级别  
 > mysql -uroot -p  
 > select @@tx_isolation;   
+> select @@session.tx_isolation;   
+> select @@global.tx_isolation;   
+
   
 更改msqyl隔离级别   
-
 > set session transaction isolation level read uncommitted;  #仅更改当前链接的
-> set global transaction isolation level read uncommitted;  #更改全局的，链接需重启生效。  
+> set global transaction isolation level read uncommitted;  #更改全局的，client需重新链接生效。  
 
 或者
 > set session tx_isolation='read-uncommitted';  #仅更改当前链接的
