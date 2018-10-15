@@ -25,7 +25,7 @@ git clone https://username@github.com/org/project.git
 或者  
 git clone https://username:password@github.com/org/project.git  
   
-在push或者pull出出现的话，则需要更改远程地址  
+在push或者pull出现的话，则需要更改远程地址  
 git remote set-url origin https://username@github.com/org/project.git  
   
 
