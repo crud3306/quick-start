@@ -166,7 +166,8 @@ In this module "composer.json" contain "elasticsearch/elasticsearch": "~2.0". An
   
 具体更改查看：  
 https://github.com/elastic/elasticsearch-php/commit/fd3b0f16f7e09cb2096ef5f2d656c9fd8dd3d61d#diff-1b0215334399d80759820e3229367adf  
+
 主要改下面两文件  
-/Elasticsearch/ClientBuilder.php  
-Elasticsearch/Connections/Connection.php  
+> /xxx/Elasticsearch/ClientBuilder.php  
+> /xxx/Elasticsearch/Connections/Connection.php  
 
