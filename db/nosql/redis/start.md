@@ -7,23 +7,23 @@ Redis 是一个基于内存的高性能key-value数据库。
   
 redis和memcache区别
 -------------
-相同点  
-1 都是在内存中进行数据的存取
-2 都支持k/v的方式存取数据
+相同点    
+1 都是在内存中进行数据的存取  
+2 都支持k/v的方式存取数据  
   
-不同点  
-1)、数据支持类型
+不同点    
+1)、数据支持类型  
 memcache只有string类型的数据。  
 Redis不仅仅支持简单的string类型数据，同时还提供list，set，hash等数据结构的存储。
 
-2)、存储方式
+2)、存储方式  
 Memecache把数据全部存在内存之中，断电后会数据会丢失。
 Redis支持数据的持久化，可以将内存中的数据保持在磁盘中，重启的时候可以再次加载进行使用。  
 
-3）value大小
+3）value大小  
 redis最大可以达到1GB，而memcache只有1MB
 
-4)、使用底层模型不同
+4)、使用底层模型不同  
 它们之间底层实现方式 以及与客户端之间通信的应用协议不一样。
 Redis直接自己构建了VM 机制 ，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求。
   
@@ -51,22 +51,24 @@ Redis为了达到最快的读写速度将数据都读到内存中，并通过异
 
 redis数据类型
 -------------
-strings  字符串
-hashes  散列
-lists  列表
-sets  集合
-sorted set   有序集合
-
-案例：
-https://www.cnblogs.com/phpshen/p/6306739.html
-https://blog.csdn.net/u013239111/article/details/81201404
+strings  字符串  
+hashes  散列  
+lists  列表  
+sets  集合  
+sorted set   有序集合  
+  
+案例：  
+https://www.cnblogs.com/phpshen/p/6306739.html  
+https://blog.csdn.net/u013239111/article/details/81201404  
 
   
   
   
 redis的并发竞争问题如何解决?  
 -------------
-Redis为单进程单线程模式，采用队列模式将并发访问变为串行访问。Redis本身没有锁的概念，Redis对于多个客户端连接并不存在竞争，但是在Jedis客户端对Redis进行并发访问时会发生连接超时、数据转换错误、阻塞、客户端关闭连接等问题，这些问题均是由于客户端连接混乱造成。对此有2种解决方法：  
+Redis为单进程单线程模式，采用队列模式将并发访问变为串行访问。Redis本身没有锁的概念，Redis对于多个客户端连接并不存在竞争，但是在Jedis客户端对Redis进行并发访问时会发生连接超时、数据转换错误、阻塞、客户端关闭连接等问题，这些问题均是由于客户端连接混乱造成。  
+
+对此有2种解决方法：  
   
 1.客户端角度，为保证每个客户端间正常有序与Redis进行通信，对连接进行池化，同时对客户端读写Redis操作采用内部锁synchronized。  
   
