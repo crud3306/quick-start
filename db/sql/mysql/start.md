@@ -51,7 +51,8 @@ CREATE TABLE IF NOT EXISTS user(
 
 例1、增加一个用户test1密码为abc，让他可以在任何主机上登录，并对所有数据库有查询、插入、修改、删除的权限。首先用以root用户连入MYSQL，然后键入以下命令：   
 > grant select,insert,update,delete on *.* to test2@localhost identified by "abc";  
-如果你不想test2有密码，可以再打一个命令将密码消掉。   
+
+如果你不想test2有密码，可以再打一个命令将密码消掉。  
 > grant select,insert,update,delete on mydb.* to test2@localhost identified by "";  
   
   
