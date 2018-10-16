@@ -51,11 +51,11 @@ Redis为了达到最快的读写速度将数据都读到内存中，并通过异
 
 redis数据类型
 -------------
-strings  字符串  
-hashes  散列  
-lists  列表  
-sets  集合  
-sorted set   有序集合  
+String —— 字符串  
+Hash —— 字典（散列）  
+List —— 列表   
+Set —— 集合   
+Sorted Set —— 有序集合   
   
 案例：  
 https://www.cnblogs.com/phpshen/p/6306739.html  
