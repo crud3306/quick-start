@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS user(
 
 例1、增加一个用户test1密码为abc，让他可以在任何主机上登录，并对所有数据库有查询、插入、修改、删除的权限。首先用以root用户连入MYSQL，然后键入以下命令：   
 > grant select,insert,update,delete on *.* to test2@localhost identified by "abc";  
-如果你不想test2有密码，可以再打一个命令将密码消掉。 
+如果你不想test2有密码，可以再打一个命令将密码消掉。   
 > grant select,insert,update,delete on mydb.* to test2@localhost identified by "";  
   
   
@@ -142,7 +142,7 @@ mysqldump -u 用户名 -p 数据库名表名> 导出的文件名
 > mysqldump -u wcnc -p smgp_apps_wcnc users> wcnc_users.sql  
   
 3.导出一个数据库结构  
-> mysqldump -u wcnc -p -d --add-drop-table smgp_apps_wcnc >d:wcnc_db.sql  
+> mysqldump -u wcnc -p -d --add-drop-table smgp_apps_wcnc > d:wcnc_db.sql  
 -d 表示只导结构，不含数据  
 --add-drop-table 在每个create语句之前增加一个drop table  
   
