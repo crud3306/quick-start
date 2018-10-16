@@ -74,8 +74,8 @@ CREATE TABLE IF NOT EXISTS user(
 > CREATE DATABASE `库名` CHARACTER SET utf8 COLLATE utf8_general_ci;  
   
 5、建表：  
-use 库名；  
-create table 表名 (字段设定列表)；  
+> use 库名；  
+> create table 表名 (字段设定列表)；  
   
 例：  
 ```sql
@@ -95,20 +95,20 @@ create_at INT(10) UNSIGNED NOT NULL DEFAULT 0
 5.2、显示表结构  
 > desc 表名;  
   
-6、删库和删表:  
-> drop database 库名; 
-> drop table 表名;  
+6、删库和删表:   
+> drop database 库名;   
+> drop table 表名;    
   
 7、将表中记录清空：  
-> delete from 表名;  // 不加where条件，即清空表中所有记录
-> truncate table 表名;  // 清空表中所有记录，同时自增id重置为1
+> delete from 表名;  // 不加where条件，即清空表中所有记录  
+> truncate table 表名;  // 清空表中所有记录，同时自增id重置为1  
   
 8、显示表中的记录：  
 > select * from 表名;
 
-8_1、添加表字段
-alter table 表名 add column 字段名 char(20);
-alter table 表名 add column 字段名 char(20) after 字段;
+8_1、添加表字段  
+> alter table 表名 add column 字段名 char(20);  
+> alter table 表名 add column 字段名 char(20) after 字段;  
 
   
 9、移动表字段位置  
@@ -150,8 +150,8 @@ mysqldump -u 用户名 -p 数据库名表名> 导出的文件名
 命令行连接mysql  
 > mysql -u root -p  
 > use 数据库;  
-  
-然后使用source命令,后面参数为脚本文件(如这里用到的.sql)  
+>     
+> 后使用source命令,后面参数为脚本文件(如这里用到的.sql，也可是.txt文件)  
 > source /home/qianym/xxx.sql  
   
   
