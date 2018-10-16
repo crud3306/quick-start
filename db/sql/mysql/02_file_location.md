@@ -16,9 +16,7 @@ MySQL的每个数据库都对应存放在一个与数据库同名的文件夹中
 2、MyISAM数据库表文件：  
   
 > .MYD文件：即MY Data，表数据文件  
-  
 > .MYI文件：即MY Index，索引文件  
-  
 > .log文件：日志文件  
   
 
@@ -26,9 +24,9 @@ MySQL的每个数据库都对应存放在一个与数据库同名的文件夹中
   
 InnoDB数据库文件（即InnoDB文件集，ib-file set）：  
   
-ibdata1、ibdata2等：系统表空间文件，存储InnoDB系统信息和用户数据库表数据和索引，所有表共用  
+1）ibdata1、ibdata2等：系统表空间文件，存储InnoDB系统信息和用户数据库表数据和索引，所有表共用。  
   
-.ibd文件：单表表空间文件，每个表使用一个表空间文件（file per table），存放用户数据库表数据和索引  
+2) .ibd文件：单表表空间文件，每个表使用一个表空间文件（file per table），存放用户数据库表数据和索引  
   
 日志文件： ib_logfile1、ib_logfile2  
   
@@ -38,8 +36,9 @@ ibdata1、ibdata2等：系统表空间文件，存储InnoDB系统信息和用户
 1、MySQL如果使用MyISAM存储引擎，数据库文件类型就包括.frm、.MYD、.MYI，默认存放位置是C:\Documentsand Settings\All Users\Application Data\MySQL\MySQL Server 5.1\data  
   
 2、MySQL如果使用InnoDB存储引擎，数据库文件类型就包括.frm、ibdata1、.ibd，存放位置有两个  
-  
-.frm文件默认存放位置是C:\Documents and Settings\All Users\ApplicationData\MySQL\MySQL Server 5.1\data  
-  
-ibdata1、.ibd文件默认存放位置是MySQL安装目录下的data文件夹    
+> .frm文件默认存放位置是C:\Documents and Settings\All Users\ApplicationData\MySQL\MySQL Server 5.1\data  
+> ibdata1、.ibd文件默认存放位置是MySQL安装目录下的data文件夹    
+
+
+
   
