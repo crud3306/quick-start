@@ -62,7 +62,8 @@ Elastic 需要 Java 8 环境。同时注意要保证环境变量JAVA_HOME正确�
   
   
 默认情况下，Elastic 只允许本机访问，如果需要远程访问，可以修改 Elastic 安装目录的config/elasticsearch.yml文件，去掉network.host的注释，将它的值改成0.0.0.0，然后重新启动 Elastic。  
-> network.host: 0.0.0.0
+> network.host: 0.0.0.0  
+
 上面代码中，设成0.0.0.0让任何人都可以访问。线上服务不要这样设置，要设成具体的 IP。  
   
   
