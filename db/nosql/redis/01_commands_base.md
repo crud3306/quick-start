@@ -15,7 +15,7 @@ Redis的键值可以使用物种数据类型：字符串，散列表，列表，
 
 基本命令
 ```
-SET 赋值，用法： SET key value
+SET 赋值，用法： SET key value [EX seconds] [PX milliseconds] [NX|XX] 
 GET 取值，用法： GET key
 INCR 递增数字，仅仅对数字类型的键有用，相当于Java的i++运算，用法： INCR key
 INCRBY 增加指定的数字，仅仅对数字类型的键有用，相当于Java的i+=3，用法：INCRBY key increment，意思是key自增increment，increment可以为负数，表示减少。
