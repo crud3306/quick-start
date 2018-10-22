@@ -157,9 +157,6 @@ main ERROR RollingFileManager (/usr/local/elasticsearch-5.5.1/logs/elasticsearch
 
 
 
-
-
-
 如果报的header错误，需要更两个文件  
 Automatically set Content-type and Accept headers  
 主要是Elasticsearch-php与服务端Elasticsearch版本号不兼容造成的：  

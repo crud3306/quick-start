@@ -51,6 +51,7 @@ drop index 索引名 on 表名;
 > explain select * from user where username = 'xxxx';  
 在结果中key列对应的值即为匹配的索引  
 
+
 使用show profile分析sql
 -----------
 1) 首先查看mysql是否支持show profile   
@@ -152,16 +153,17 @@ all：查询全部表中的数据
 
 7）ref：
 
-8）rows：找到所需记录需要读取的行数（估计值）
+8）rows：找到所需记录需要读取的行数（估计值）  
 
-9）Extra：
-	a) using filesort：性能损耗大，需要额外的一次排序（查询）
-	一般出现在order by语句中
+9）Extra：  
+	a) using filesort：性能损耗大，需要额外的一次排序（查询）  
+	一般出现在order by语句中  
 
-	b) using temporary：性能损耗大，用到了临时表。
-	一般出现在group by语句中
+	b) using temporary：性能损耗大，用到了临时表。  
+	一般出现在group by语句中  
 
-	c) using index：性能提升，索引覆盖。原因：不读取原文件，只从索引文件中获取数据（不需要回表查询）
+	c) using index：性能提升，索引覆盖。  
+	原因：不读取原文件，只从索引文件中获取数据（不需要回表查询）
 
 	d) using where：(需要回表查询)  
 
