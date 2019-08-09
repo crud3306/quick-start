@@ -132,20 +132,20 @@ select @@tx_isolation;
 
   
 更改mysql隔离级别   
-> set session transaction isolation level read uncommitted;  #仅更改当前链接的(仅在本次会话中生效)
-> set global transaction isolation level read uncommitted;  #更改全局的，client需重新链接生效。  
-> set session transaction isolation level read committed;
-> set session transaction isolation level read uncommitted;
-> set session transaction isolation level read uncommitted;
+> set session transaction isolation level read uncommitted;  #仅更改当前链接的(仅在本次会话中生效)  
+> set global transaction isolation level read uncommitted;  #更改全局的，client需重新链接生效。   
+> set session transaction isolation level read committed;  
+> set session transaction isolation level repeatable read;  
+> set session transaction isolation level serializable;  
 
-或者
-> set session tx_isolation='read-uncommitted';  #仅更改当前链接的
+或者  
+> set session tx_isolation='read-uncommitted';  #仅更改当前链接的  
   
 更改后，再次用 select @@tx_isolation; 查看当前隔离级别  
   
-事务参考地址：
-https://juejin.im/post/5ba0c3a6e51d450e597b2fb4
-https://blog.csdn.net/sunjinjuan/article/details/80916903
+事务参考地址：  
+https://juejin.im/post/5ba0c3a6e51d450e597b2fb4  
+https://blog.csdn.net/sunjinjuan/article/details/80916903  
   
   
 保存点（回滚点） savepoint  
