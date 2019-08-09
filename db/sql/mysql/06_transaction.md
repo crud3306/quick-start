@@ -196,6 +196,95 @@ Undo Log的原理很简单，为了满足事务的原子性，在操作任何数
 
 
 
+MVCC
+=========
+名词简析:
+------
+1.MVCC:是multiversion concurrency control的简称，也就是多版本并发控制，是个很基本的概念。MVCC的作用是让事务在并行发生时，在一定隔离级别前提下，可以保证在某个事务中能实现一致性读，也就是该事务启动时根据某个条件读取到的数据，直到事务结束时，再次执行相同条件，还是读到同一份数据，不会发生变化（不会看到被其他并行事务修改的数据）。
+
+2.read view:InnoDB MVCC使用的内部快照的意思。在不同的隔离级别下，事务启动时（有些情况下，可能是SQL语句开始时）看到的数据快照版本可能也不同。在上面介绍的几个隔离级别下会用到 read view。
+
+3.快照读: 就是所谓的根据read view去获取信息和数据，不会加任何的锁。
+
+4.当前读:前读会获取得到所有已经提交数据，按照逻辑上来讲的话，在一个事务中第一次当前读和第二次当前读的中间有新的事务进行DML操作，这个时候俩次当前读的结果应该是不一致的，但是实际的情况却是在当前读的这个事务还没提交之前，所有针对当前读的数据修改和插入都会被阻塞，主要是因为next-key lock解决了当前读可能会发生幻读的情况。
+next-key lock当使用主键索引进行当前读的时候，会降级为record lock(行锁)
+
+9.2 Read view详析
+---------
+InnoDB支持MVCC多版本控制，其中 READ COMMITTED 和 REPEATABLE READ 隔离级别是利用consistent read view(一致读视图)方式支持的。这两种隔离级别下的mvcc主要的区别是生成read view的生成原则不同。
+
+所谓的consistent read view就是在某一时刻给事务系统trx_sys打snapshot(快照)，把当时的trx_sys状态(包括活跃读写事务数组)记下来，之后的所有读操作根据其事务ID(即trx_id)与snapshot中trx_sys的状态做比较，以此判断read view对事务的可见性。
+
+REPEATABLE READ隔离级别(除了GAP锁之外)和READ COMMITTED隔离级别的差别是创建snapshot时机不同。REPEATABLE READ隔离级别是在事务开始时刻，确切的说是第一个读操作创建read view的时候,READ COMMITTED隔离级别是在语句开始时刻创建read view的。这就意味着REPEATABLE READ隔离级别下面一个事务的SELECT操作只会获取一个read view，但是READ COMMITTED隔离级别下一个事务是可以获取多个read view的。
+
+创建／关闭read view需要持有trx_sys->mutex，会降低系统性能，5.7版本对此进行优化，在事务提交时session会cache只读事务的read view。
+
+不同隔离级别下read view的生成机制
+```
+1. read-commited:
+　　函数：ha_innobase::external_lock
+　　if (trx->isolation_level <= TRX_ISO_READ_COMMITTED
+　　　　&& trx->global_read_view) {
+　　　　/ At low transaction isolation levels we let
+　　　　each consistent read set its own snapshot /
+　　read_view_close_for_mysql(trx);
+即：在每次语句执行的过程中，都关闭read_view, 重新在row_search_for_mysql函数中创建当前的一份read_view。
+这样就可以根据当前的全局事务链表创建read_view的事务区间，实现read committed隔离级别。
+
+2. repeatable read：
+　　在repeatable read的隔离级别下，创建事务trx结构的时候，就生成了当前的global read view。
+　　使用trx_assign_read_view函数创建，一直维持到事务结束，这样就实现了repeatable read隔离级别。
+```
+正是因为read view 生成原则，导致在不同隔离级别()下,read committed 总是读最新一份快照数据，而repeatable read 读事务开始时的行数据版本。  
+
+
+9.3 read view 判断当前版本数据项是否可见
+---------
+在InnoDB中，创建一个新事务的时候，InnoDB会将当前系统中的活跃事务列表（trx_sys->trx_list）创建一个副本（read view），副本中保存的是系统当前不应该被本事务看到的其他事务id列表。当用户在这个事务中要读取该行记录的时候，InnoDB会将该行当前的版本号与该read view进行比较。
+
+具体的算法如下:
+
+设该行的当前事务id为trx_id，read view中最早的事务id为trx_id_min, 最迟的事务id为trx_id_max。  
+如果trx_id< trx_id_min的话，那么表明该行记录所在的事务已经在本次新事务创建之前就提交了，所以该行记录的当前值是可见的。  
+如果trx_id>trx_id_max的话，那么表明该行记录所在的事务在本次新事务创建之后才开启，所以该行记录的当前值不可见。  
+如果trx_id_min <= trx_id <= trx_id_max, 那么表明该行记录所在事务在本次新事务创建的时候处于活动状态，从trx_id_min到trx_id_max进行遍历，如果trx_id等于他们之中的某个事务id的话，那么不可见。
+
+从该行记录的DB_ROLL_PTR指针所指向的回滚段中取出最新的undo-log的版本号的数据，将该可见行的值返回。  
+需要注意的是，新建事务(当前事务)与正在内存中commit 的事务不在活跃事务链表中。  
+
+在具体多版本控制中我们先来看下源码：
+
+函数：read_view_sees_trx_id。  
+read_view中保存了当前全局的事务的范围：  
+【low_limit_id， up_limit_id】  
+
+1.当行记录的事务ID小于当前系统的最小活动id，就是可见的。
+```
+if (trx_id < view->up_limit_id) {
+  return(TRUE);
+}
+```
+          
+2.当行记录的事务ID大于当前系统的最大活动id（也就是尚未分配的下一个事务的id），就是不可见的。
+```
+if (trx_id >= view->low_limit_id) {
+  return(FALSE);
+}
+```
+          
+3.当行记录的事务ID在活动范围之中时，判断是否在活动链表中，如果在就不可见，如果不在就是可见的。
+```
+for (i = 0; i < n_ids; i++) {
+  trx_id_t view_trx_id
+    = read_view_get_nth_trx_id(view, n_ids - i - 1);
+  if (trx_id <= view_trx_id) {
+    return(trx_id != view_trx_id);
+  }
+}
+```
+
+参考地址：  
+http://www.lotterychief.com/mysql-tutorials-416576.html  
 
 
 
