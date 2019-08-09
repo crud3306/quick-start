@@ -329,3 +329,5 @@ CAS算法
 2.过程:假设有A线程准备去修改内存中变量名为name的值,因此A线程会用以前自己读到的name变量值和此刻name的值做对比,如果一样,则表明在变量值没被修改过,因此可以更新修改,否则更新失败.
 ```
 
+
+https://www.cnblogs.com/zhoujinyi/p/3435982.html （record lock、gap lock、next-key lock）
