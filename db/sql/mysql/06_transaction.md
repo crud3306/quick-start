@@ -82,17 +82,17 @@ mysql支持4种事务隔离级别：
     
 > read committed  已提交读（读已提交数据)  
 只允许事务读取已经被其它事务提交的变更。可以避免脏读，但不可重复读和幻读问题仍可能出现  
-
+```
 DBMS需要对选定对象的写锁(write locks)一直保持到事务结束，但是读锁(read locks)在SELECT操作完成后马上释放（因此“不可重复读”现象可能会发生，见下面描述）。和可重复读隔离级别一样，也不要求“范围锁(range-locks)”。
 
 不可重复读是因为，事务只维持了选定对象的写锁，如果一些选定对象只涉及读锁，那么在读锁释放之后，其它事务可以对这些对象进行修改，该事务再次读取时就不一致了。例如，事务A对数据对象拥有写锁，事务B读取了数据对象，后事务A有对数据对象进行的更改并提交，事务B再次读取数据对象，两次读取结果不同。
 
 大多数数据库的默认事务隔离级别都是这个。
-
+```
   
 > repeatable read  可重复读  
 确保事务可以多次从一个字段中读取相同的值，在这个事务持续期间，禁止其他事物对这个字段进行更新。可以避免脏读和不可重复读，但幻读问题仍然存在。  
-
+```
 该级别保证了同一个事务中多次读取同样的记录的结果是一致的。
 
 对选定对象的读锁(read locks)和写锁(write locks)一直保持到事务结束，但不要求“范围锁(range-locks)”，因此可能会发生“幻读(phantom reads)”。
@@ -100,13 +100,13 @@ DBMS需要对选定对象的写锁(write locks)一直保持到事务结束，但
 幻读：是因为没有保持范围锁，该事务执行了一个 where 子句的范围查询后，其他事务可能新增了一条处于该事务 where 查询范围内的记录，那么该事务再次执行范围查询时就会看到这些新增的记录行（幻行，Phantom row）。
 
 可重复读是 MySQL 的默认事务隔离级别。
-
+```
   
 > serializable  可串行化  
 确保事务可以从一个表中读取相同的行，在这个事务持续期间，禁止其他事务对该表执行插入、更新、和删除操作。所有并发问题都可避免，但性能十分低下。  
-
+```
 实现可序列化要求在选定对象上的读锁和写锁保持直到事务结束后才能释放。在 SELECT 的查询中使用一个 WHERE 子句 来描述一个范围时应该获得一个“范围锁(range-locks)”。这种机制可以避免“幻读(phantom reads)”现象。
-
+```
 
   
 mysql默认的事务隔离级别是repeatable read。
@@ -131,7 +131,7 @@ select @@tx_isolation;
 ```
 
   
-更改msqyl隔离级别   
+更改mysql隔离级别   
 > set session transaction isolation level read uncommitted;  #仅更改当前链接的(仅在本次会话中生效)
 > set global transaction isolation level read uncommitted;  #更改全局的，client需重新链接生效。  
 > set session transaction isolation level read committed;
