@@ -9,3 +9,8 @@ https://blog.itning.top/posts/elasticsearch/20190325-distributed-search-engine-e
 干货 | BAT等一线大厂 Elasticsearch面试题解读
 ----
 https://juejin.im/entry/5c46d7c2e51d4551df6f2338
+
+
+面试小结之Elasticsearch篇
+-----
+https://www.jianshu.com/p/d226c197919e
