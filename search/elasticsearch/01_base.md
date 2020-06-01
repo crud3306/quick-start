@@ -168,34 +168,110 @@ green  open   haha             6   1     677105            2    214.1mb         
 ```
 
 简单索引操作
-============
-创建索引
-```
-PUT /test_index?pretty
+==============
 
-返回
+查看所有索引
+--------------
+```sh
+GET _all/_settings
+
+#执行结果
 {
-	"acknowledged":true,
-	"shards_acknowledged":true,
+  "test_index" : {
+    "settings" : {
+      "index" : {
+        "creation_date" : "1590978319385",
+        "number_of_shards" : "5",
+        "number_of_replicas" : "1",
+        "uuid" : "p9ICMZrjQ8WrdcYtqgrokA",
+        "version" : {
+          "created" : "6060099"
+        },
+        "provided_name" : "test_index"
+      }
+    }
+  },
+  "ecommerce" : {
+    "settings" : {
+      "index" : {
+        "creation_date" : "1590982585884",
+        "number_of_shards" : "5",
+        "number_of_replicas" : "1",
+        "uuid" : "ePlg5NEGTJeCbj-upJak3g",
+        "version" : {
+          "created" : "6060099"
+        },
+        "provided_name" : "ecommerce"
+      }
+    }
+  }
 }
 ```
+
+
+查看指定的索引
+--------------
+```sh
+#GET /索引名称/_settings
+GET /ecommerce/_settings
+
+#结果
+{
+  "ecommerce" : {
+    "settings" : {
+      "index" : {
+        "creation_date" : "1590982585884",
+        "number_of_shards" : "5",
+        "number_of_replicas" : "1",
+        "uuid" : "ePlg5NEGTJeCbj-upJak3g",
+        "version" : {
+          "created" : "6060099"
+        },
+        "provided_name" : "ecommerce"
+      }
+    }
+  }
+}
+```
+
+
+创建索引
+--------------
+```sh
+PUT ecommerce
+
+#执行结果
+{
+  "acknowledged" : true,
+  "shards_acknowledged" : true,
+  "index" : "ecommerce"
+}
+```
+
 
 删除索引
-```
-DELETE /test_index?pretty
-
-返回
+--------------
+```sh
+DELETE ecommerce
+ 
+#执行结果：
 {
-	"acknowledged":true
+  "acknowledged" : true
 }
 ```
+
+
 
 
 CRUD实例
-===========
-新增商品
-```
-语法：PUT /index/type/id
+==============
+
+
+添加文档
+--------------
+```sh
+#语法：PUT /index/type/id
+#如果不指定id，则ES会自动生成id
 
 PUT /ecommerce/product/1
 {
@@ -215,20 +291,72 @@ PUT /ecommerce/product/2
 	"tags":["fangzhu"]
 }
 
-注：es新增数据时会自动根据index和type创建index与type，不需要提前创建，而且es默认会对document每个field都建立倒排索引，让其可以被搜索。
+# 注意
+# es新增数据时会自动根据index和type创建index与type，不需要提前创建
+# es默认会对document每个field都建立倒排索引，让其可以被搜索。
+
+#执行结果
+{
+  "_index" : "ecommerce",
+  "_type" : "product",
+  "_id" : "2",
+  "_version" : 1,
+  "result" : "created",
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "_seq_no" : 0,
+  "_primary_term" : 1
+}
 ```
 
-查询商品
+
+根据id查看
+--------------
+```sh
+GET /ecommerce/product/2
+
+#执行结果
+{
+  "_index" : "ecommerce",
+  "_type" : "product",
+  "_id" : "2",
+  "_version" : 1,
+  "_seq_no" : 0,
+  "_primary_term" : 1,
+  "found" : true,
+  "_source" : {
+    "name" : "jiajieshi yagao",
+    "desc" : "youxiao fangzhu",
+    "price" : 25,
+    "producer" : "jiajieshi producer",
+    "tags" : [
+      "fangzhu"
+    ]
+  }
+}
+
+
+GET /ecommerce/product/2/_source
+
+#执行结果：
+{
+  "name" : "jiajieshi yagao",
+  "desc" : "youxiao fangzhu",
+  "price" : 25,
+  "producer" : "jiajieshi producer",
+  "tags" : [
+    "fangzhu"
+  ]
+}
 ```
-GET /ecommerce/product/1
-
-返回
-
-```
 
 
-修改商品 - 替换文档
-```
+替换文档 - 直接覆盖
+--------------
+```sh
 PUT /ecommerce/product/1
 {
 	"name":"gaolujie yagao",
@@ -238,70 +366,251 @@ PUT /ecommerce/product/1
 	"tags":["meibai", "fangzhu"]
 }
 
-注意：替换后，原文档字段丢失，用的是新文档的字段。如果只想修改某个字段，可用用post与_update更新文档
-```
-
-修改商品 - 更新文档
-```
-POST /ecommerce/product/1/_update
+#执行结果
 {
-	"name":"jiaqiangban gaolujie yagao"
+  "_index" : "ecommerce",
+  "_type" : "product",
+  "_id" : "1",
+  "_version" : 2,
+  "result" : "updated",
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "_seq_no" : 1,
+  "_primary_term" : 1
 }
 ```
 
-删除商品
+
+修改文档-只更新需要更新的字段
+--------------
+```sh
+POST /ecommerce/product/1/_update
+{
+	"doc":{
+		"name":"jiaqiangban gaolujie yagao",
+		"price":25
+	}
+}
+#注意doc关键字，需要在它下面写要修改的字段
+
+#执行结果
+{
+  "_index" : "ecommerce",
+  "_type" : "product",
+  "_id" : "1",
+  "_version" : 8,
+  "result" : "updated",
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "_seq_no" : 7,
+  "_primary_term" : 1
+}
 ```
-DELETE /ecommerce/product/1/?pretty
-
-返回：
 
 
-?pretty表示格式化显示返回结果
+删除字段
+--------------
+```sh
+POST /ecommerce/product/1/_update
+{
+	"script":"ctx._source.remove(\"price\")"
+}
+#用到script关键字
+
+#结果
+{
+  "_index" : "ecommerce",
+  "_type" : "product",
+  "_id" : "1",
+  "_version" : 10,
+  "result" : "updated",
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "_seq_no" : 9,
+  "_primary_term" : 1
+}
+```
+
+
+添加字段
+--------------
+```sh
+POST /ecommerce/product/1/_update
+{
+	"script":"ctx._source.price=25"
+}
+
+#结果
+{
+  "_index" : "ecommerce",
+  "_type" : "product",
+  "_id" : "1",
+  "_version" : 11,
+  "result" : "updated",
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "_seq_no" : 10,
+  "_primary_term" : 1
+}
 ```
 
 
 
-多种搜索方式
-===========
-搜索全部商品
+删除一个文档
+--------------
+```sh
+DELETE /ecommerce/product/3/?pretty
+
+#执行结果：
+{
+  "_index" : "ecommerce",
+  "_type" : "product",
+  "_id" : "3",
+  "_version" : 3,
+  "result" : "deleted",
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "_seq_no" : 2,
+  "_primary_term" : 1
+}
 ```
-GET /ecommerce/product/_search
 
-took: 耗费了几毫秒
-timed_out: 是否超时，false表示没有
-_shards: 数据拆成了5个分片，所以对于搜索请求，会打到所有的primary shard（或者是它的某个replica shard也可以）
 
-hits.total: 查询结果的数量，即多少个document
-hits.max_score: document对于一个search的相关度的匹配分数，越相关，就越匹配，分数也越高
-hits.hits: 包含了匹配搜索的document的详细数据
+条件删除文档
+--------------
+```sh
+DELETE /test_index/user/_query
+{
+  "query": {
+    "match": { "first_name": "zhou"}
+  }
+}
+
+#执行结果
 ```
 
 
-1 query string search
------------
+
+Query
+=============
+- 1 Query string search
 在url后url中带条件参数
 
 生产环境中不用
 
 
-2 query DSL
------------
+- 2 Query DSL
 DSL: Domain Specified Language，特定领域的语言
 
 在http request body 请求体中，用json格式来构建查询语法，比较方便，可构建各种复杂的语法
 
-查询所有
-```
+
+
+查询所有商品
+-------------
+```sh
+GET /ecommerce/product/_search
+#或者
 GET /ecommerce/product/_search
 {
 	"query": {
 		"match_all":{}
 	}
 }
+#或带上排序
+GET /ecommerce/product/_search
+{
+	"query": {
+		"match_all":{}
+	},
+	"sort":[
+		{"price":"asc"}
+	]
+}
+
+#执行结果
+{
+  "took" : 1,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : null,
+    "hits" : [
+      {
+        "_index" : "ecommerce",
+        "_type" : "product",
+        "_id" : "2",
+        "_score" : null,
+        "_source" : {
+          "name" : "jiajieshi yagao",
+          "desc" : "youxiao fangzhu",
+          "price" : 25,
+          "producer" : "jiajieshi producer",
+          "tags" : [
+            "fangzhu"
+          ]
+        },
+        "sort" : [
+          25
+        ]
+      },
+      {
+        "_index" : "ecommerce",
+        "_type" : "product",
+        "_id" : "1",
+        "_score" : null,
+        "_source" : {
+          "name" : "gaolujie yagao",
+          "desc" : "gaoxiao meibai",
+          "price" : 30,
+          "producer" : "gaolujie producer",
+          "tags" : [
+            "meibai",
+            "fangzhu"
+          ]
+        },
+        "sort" : [
+          30
+        ]
+      }
+    ]
+  }
+}
+
+#took: 耗费了几毫秒
+#timed_out: 是否超时，false表示没有
+#_shards: 数据拆成了5个分片，所以对于搜索请求，会打到所有的primary shard（或者是它的某个replica shard也可以）
+
+#hits.total: 查询结果的数量，即多少个document
+#hits.max_score: document对于一个search的相关度的匹配分数，越相关，就越匹配，分数也越高
+#hits.hits: 包含了匹配搜索的document的详细数据
 ```
 
+
 查询名称包含yaogao的商品，同时按照降序排序
-```
+-------------
+```sh
 GET /ecommerce/product/_search
 {
 	"query": {
@@ -313,10 +622,67 @@ GET /ecommerce/product/_search
 		{"price":"desc"}
 	]
 }
+
+#执行结果
+{
+  "took" : 4,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : null,
+    "hits" : [
+      {
+        "_index" : "ecommerce",
+        "_type" : "product",
+        "_id" : "1",
+        "_score" : null,
+        "_source" : {
+          "name" : "gaolujie yagao",
+          "desc" : "gaoxiao meibai",
+          "price" : 30,
+          "producer" : "gaolujie producer",
+          "tags" : [
+            "meibai",
+            "fangzhu"
+          ]
+        },
+        "sort" : [
+          30
+        ]
+      },
+      {
+        "_index" : "ecommerce",
+        "_type" : "product",
+        "_id" : "2",
+        "_score" : null,
+        "_source" : {
+          "name" : "jiajieshi yagao",
+          "desc" : "youxiao fangzhu",
+          "price" : 25,
+          "producer" : "jiajieshi producer",
+          "tags" : [
+            "fangzhu"
+          ]
+        },
+        "sort" : [
+          25
+        ]
+      }
+    ]
+  }
+}
 ```
 
+
 分页查询商品，假设每页显示一条商品
-```
+-------------
+```sh
 GET /ecommerce/product/_search
 {
 	"query": {
@@ -327,15 +693,54 @@ GET /ecommerce/product/_search
 	"sort":[
 		{"price":"desc"}
 	],
-	"from":1,//从第几条开始
-	"size":1 //每页条数
+	"from":1,
+	"size":1 
+}
+
+#from：从第几条开始
+#size：每页条数
+
+#执行结果
+{
+  "took" : 2,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : null,
+    "hits" : [
+      {
+        "_index" : "ecommerce",
+        "_type" : "product",
+        "_id" : "2",
+        "_score" : null,
+        "_source" : {
+          "name" : "jiajieshi yagao",
+          "desc" : "youxiao fangzhu",
+          "price" : 25,
+          "producer" : "jiajieshi producer",
+          "tags" : [
+            "fangzhu"
+          ]
+        },
+        "sort" : [
+          25
+        ]
+      }
+    ]
+  }
 }
 ```
 
-指定只需要查询出商品的名称和价格
-```
-需要用到_source 
-
+指定只需要查询出商品的名称和价格 
+-------------
+```sh
+#需要用到_source
 GET /ecommerce/product/_search
 {
 	"query": {
@@ -346,28 +751,57 @@ GET /ecommerce/product/_search
 	"_source":[
 		"name",
 		"price"
-	]
+	],
 	"sort":[
 		{"price":"desc"}
 	],
-	"from":1,//从第几条开始
-	"size":1 //每页条数
+	"from":1,
+	"size":1 
+}
+
+#结果，注意看_source下只有指定的字段
+{
+  "took" : 2,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : null,
+    "hits" : [
+      {
+        "_index" : "ecommerce",
+        "_type" : "product",
+        "_id" : "2",
+        "_score" : null,
+        "_source" : {
+          "price" : 25,
+          "name" : "jiajieshi yagao"
+        },
+        "sort" : [
+          25
+        ]
+      }
+    ]
+  }
 }
 ```
 
-更加适合在生产环境中使用，可以构建复杂的查询
-
-3 query filter 对数据进行过滤
------------
-搜索商品名称含yaogao，而且售价大于25元的商品
-```
+query filter 对数据进行过滤
+-------------
+```sh
+#搜索商品名称含yaogao，而且售价大于25元的商品
 GET /ecommerce/product/_search
 {
 	"query":{
 		"bool":{
 			"must":{
 				"match":{
-					"name":"yaogao"
+					"name":"yagao"
 				}
 			},
 			"filter":{
@@ -381,14 +815,46 @@ GET /ecommerce/product/_search
 	}
 }
 
-这种包含多种查询条件的
+#结果
+{
+  "took" : 6,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 1,
+    "max_score" : 0.2876821,
+    "hits" : [
+      {
+        "_index" : "ecommerce",
+        "_type" : "product",
+        "_id" : "1",
+        "_score" : 0.2876821,
+        "_source" : {
+          "name" : "gaolujie yagao",
+          "desc" : "gaoxiao meibai",
+          "price" : 30,
+          "producer" : "gaolujie producer",
+          "tags" : [
+            "meibai",
+            "fangzhu"
+          ]
+        }
+      }
+    ]
+  }
+}
 ```
 
 
-4 full-text search （全文检索）
------------
+full-text search （全文检索）  
+-------------
 将输入的搜索串拆解开来，去倒排索引里面一一匹配，只要能匹配上任意一个拆解后的单语，就可以作为结果返回。
-```
+```sh
 GET /ecommerce/product/_search
 {
 	"query":{
@@ -397,13 +863,62 @@ GET /ecommerce/product/_search
 		}
 	}
 }
+
+#结果
+{
+  "took" : 2,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : 0.2876821,
+    "hits" : [
+      {
+        "_index" : "ecommerce",
+        "_type" : "product",
+        "_id" : "2",
+        "_score" : 0.2876821,
+        "_source" : {
+          "name" : "jiajieshi yagao",
+          "desc" : "youxiao fangzhu",
+          "price" : 25,
+          "producer" : "jiajieshi producer",
+          "tags" : [
+            "fangzhu"
+          ]
+        }
+      },
+      {
+        "_index" : "ecommerce",
+        "_type" : "product",
+        "_id" : "1",
+        "_score" : 0.2876821,
+        "_source" : {
+          "name" : "gaolujie yagao",
+          "desc" : "gaoxiao meibai",
+          "price" : 30,
+          "producer" : "gaolujie producer",
+          "tags" : [
+            "meibai",
+            "fangzhu"
+          ]
+        }
+      }
+    ]
+  }
+}
 ```
 
 
-5 phrase search（短语搜索）
------------
+phrase search（短语搜索）
+-------------
 要求输入的搜索串，必须在指定的字段文本中，完全包含一模一样的，才可以算匹配，才能作为结果返回
-```
+```sh
 GET /ecommerce/product/_search
 {
 	"query":{
@@ -412,11 +927,29 @@ GET /ecommerce/product/_search
 		}
 	}
 }
+
+#结果
+{
+  "took" : 1,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 0,
+    "max_score" : null,
+    "hits" : [ ]
+  }
+}
 ```
 
-6 高亮搜索结果
------------
-```
+
+高亮搜索结果
+-------------
+```sh
 GET /ecommerce/product/_search
 {
 	"query":{
@@ -430,14 +963,77 @@ GET /ecommerce/product/_search
 		}
 	}
 }
+
+#结果，注意多返回的highlight字段
+{
+  "took" : 13,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : 0.2876821,
+    "hits" : [
+      {
+        "_index" : "ecommerce",
+        "_type" : "product",
+        "_id" : "2",
+        "_score" : 0.2876821,
+        "_source" : {
+          "name" : "jiajieshi yagao",
+          "desc" : "youxiao fangzhu",
+          "price" : 25,
+          "producer" : "jiajieshi producer",
+          "tags" : [
+            "fangzhu"
+          ]
+        },
+        "highlight" : {
+          "producer" : [
+            "jiajieshi <em>producer</em>"
+          ]
+        }
+      },
+      {
+        "_index" : "ecommerce",
+        "_type" : "product",
+        "_id" : "1",
+        "_score" : 0.2876821,
+        "_source" : {
+          "name" : "gaolujie yagao",
+          "desc" : "gaoxiao meibai",
+          "price" : 30,
+          "producer" : "gaolujie producer",
+          "tags" : [
+            "meibai",
+            "fangzhu"
+          ]
+        },
+        "highlight" : {
+          "producer" : [
+            "gaolujie <em>producer</em>"
+          ]
+        }
+      }
+    ]
+  }
+}
 ```
 
 
+
+聚合分析
+=============
 group by + avg + sort等聚合分析
-================
 
-使用aggs前，需要先将文本field的fielddata属性设置为true。
-```
+
+使用aggs前，如果字段是文本，则需要先将文本field的fielddata属性设置为true。如果是字段数字，则不用专门设置。
+-------------
+```sh
 PUT /ecommerce/_mapping/product
 {
 	"properties":{
@@ -447,83 +1043,198 @@ PUT /ecommerce/_mapping/product
 		}
 	}
 }
-```
 
-1 计算每个tag下的商品数量
--------------
-```
-GET /ecommerce/product/_search
+#结果
 {
-	"size":0,//如果不加该参数，则会同时返回参与聚合的数据。size设为0，则不返回
-	"aggs":{
-		"group_tags 这个是起的任意名字":{
-			"terms":{
-				"field":"tags"
-			}
-		}
-	}
+  "acknowledged" : true
 }
 ```
 
 
-2 对名称中包含yaogao的商品，计算每个tag下的商品数量
-----------
-```
-GET /ecommerce/product/_search
-{
-	"size":0,//如果不加该参数，则会同时返回参与聚合的数据。size设为0，则不返回
-	"query":{
-		"match":{
-			"name":"yagao"
-		}
-	},
-	"aggs":{
-		"group_tags 这个是起的任意名字":{
-			"terms":{
-				"field":"tags"
-			}
-		}
-	}
-}
-```
-
-3 计算每个tag下的商品的平均价格
+计算每个tag下的商品数量
 -----------
-思路：先分组，再算每组的平均值
-```
+```sh
 GET /ecommerce/product/_search
 {
-	"size":0,//如果不加该参数，则会同时返回参与聚合的数据。size设为0，则不返回
+	"size":0,
+	"aggs":{
+		"group_tags":{
+			"terms":{
+				"field":"tags"
+			}
+		}
+	}
+}
+
+#结果，注意看aggregations字段下的buckets
+{
+  "took" : 5,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : 0.0,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "group_tags" : {
+      "doc_count_error_upper_bound" : 0,
+      "sum_other_doc_count" : 0,
+      "buckets" : [
+        {
+          "key" : "fangzhu",
+          "doc_count" : 2
+        },
+        {
+          "key" : "meibai",
+          "doc_count" : 1
+        }
+      ]
+    }
+  }
+}
+#group_tags 是起的任意名字
+```
+
+对名称中包含yaogao的商品，计算每个tag下的商品数量
+-----------
+```sh
+#如果不加size参数，则会同时返回参与聚合的数据。size设为0，则不返回
+GET /ecommerce/product/_search
+{
+	"size":0,
 	"query":{
 		"match":{
 			"name":"yagao"
 		}
 	},
 	"aggs":{
-		"group_tags 这个是起的任意名字":{
+		"group_tags":{
+			"terms":{
+				"field":"tags"
+			}
+		}
+	}
+}
+
+# 结果，注意看aggregations字段下的buckets
+{
+  "took" : 0,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : 0.0,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "group_tags" : {
+      "doc_count_error_upper_bound" : 0,
+      "sum_other_doc_count" : 0,
+      "buckets" : [
+        {
+          "key" : "fangzhu",
+          "doc_count" : 2
+        },
+        {
+          "key" : "meibai",
+          "doc_count" : 1
+        }
+      ]
+    }
+  }
+}
+```
+
+
+对名称中包含yaogao的商品，并计算每个tag下的商品的平均价格
+-----------
+#思路：aggs嵌套，先分组，再算每组的平均值
+```sh
+GET /ecommerce/product/_search
+{
+	"size":0,
+	"query":{
+		"match":{
+			"name":"yagao"
+		}
+	},
+	"aggs":{
+		"group_tags":{
 			"terms":{
 				"field":"tags",
-				"order":{"avg_price":"desc"} //
+				"order":{"avg_price":"desc"}
 			},
 			"aggs":{
-				"avg_price 这个是起的任意名字":{
+				"avg_price":{
 					"avg":{"field":"price"}
 				}
 			}
 		}
 	}
 }
+
+# group_tags和avg_price是自定义的名字，可以任意起
+
+#结果
+{
+  "took" : 26,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : 0.0,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "group_tags" : {
+      "doc_count_error_upper_bound" : 0,
+      "sum_other_doc_count" : 0,
+      "buckets" : [
+        {
+          "key" : "meibai",
+          "doc_count" : 1,
+          "avg_price" : {
+            "value" : 30.0
+          }
+        },
+        {
+          "key" : "fangzhu",
+          "doc_count" : 2,
+          "avg_price" : {
+            "value" : 27.5
+          }
+        }
+      ]
+    }
+  }
+}
 ```
 
-4 按照指定的价格范围区间进行分组，然后在每组内再按照tag进行分组，最后再计算每组的平均价格
+按照指定的价格范围区间进行分组，然后在每组内再按照tag进行分组，最后再计算每组的平均价格
 -----------
-思路：先分组，再算每组的平均值
-```
+思路：aggs嵌套，先按price分组，再按tag分组，再算每组的平均值
+```sh
 GET /ecommerce/product/_search
 {
 	"size":0,
 	"aggs":{
-		"group_by_price 这个是起的任意名字":{
+		"group_by_price":{
 			"range":{
 				"field":"price",
 				"ranges":[
@@ -538,16 +1249,17 @@ GET /ecommerce/product/_search
 					{
 						"from":40,
 						"to":50
-					},
+					}
 				]
 			},
 			"aggs":{
-				"group_by_tags 这个是起的任意名字":{
-					"term":{
-						"field":"tags"
+				"group_by_tags":{
+					"terms":{
+						"field":"tags",
+						"order":{"avg_price":"desc"}
 					},
 					"aggs":{
-						"average_price 这个是起的任意名字":{
+						"avg_price":{
 							"avg":{
 								"field":"price"
 							}
@@ -557,6 +1269,77 @@ GET /ecommerce/product/_search
 			}
 		}
 	}
+}
+
+#结果
+{
+  "took" : 1,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : 0.0,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "group_by_price" : {
+      "buckets" : [
+        {
+          "key" : "0.0-20.0",
+          "from" : 0.0,
+          "to" : 20.0,
+          "doc_count" : 0,
+          "group_by_tags" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [ ]
+          }
+        },
+        {
+          "key" : "20.0-40.0",
+          "from" : 20.0,
+          "to" : 40.0,
+          "doc_count" : 2,
+          "group_by_tags" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "meibai",
+                "doc_count" : 1,
+                "avg_price" : {
+                  "value" : 30.0
+                }
+              },
+              {
+                "key" : "fangzhu",
+                "doc_count" : 2,
+                "avg_price" : {
+                  "value" : 27.5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "40.0-50.0",
+          "from" : 40.0,
+          "to" : 50.0,
+          "doc_count" : 0,
+          "group_by_tags" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [ ]
+          }
+        }
+      ]
+    }
+  }
 }
 ```
 
